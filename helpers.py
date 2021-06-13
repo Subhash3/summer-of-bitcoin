@@ -11,7 +11,7 @@ def parse_mempool_csv(mempool_file):
         data = data[1:] # first line contains header
 
         transactions = list()
-        txid__to_transaction_map: typing.Dict[str, MempoolTransaction] = dict()
+        txid_to_transaction_map: typing.Dict[str, MempoolTransaction] = dict()
         for line in data :
             tx_info = line.strip().split(',')
             txid, fee, weight, parent_txs_string = tx_info
@@ -26,9 +26,9 @@ def parse_mempool_csv(mempool_file):
             # print(txid, fee, weight, parent_txs)
             tx = MempoolTransaction(txid, fee, weight, parent_txs)
             transactions.append(tx)
-            txid__to_transaction_map[txid] = tx
+            txid_to_transaction_map[txid] = tx
 
-        return transactions, txid__to_transaction_map
+        return transactions, txid_to_transaction_map
 
 
 def knapsack_generalized(total_weight, items:typing.List[MempoolTransaction], n):
@@ -110,46 +110,3 @@ def knapsack_optimized(total_weight, weights, profits, item_ids, n):
             w = w - weights[i-1]
 
     return max_profit_bkup, used_items
-
-
-def construct_block(weight_limit, transactions, n) :
-    print(f"Weight limit: {weight_limit}")
-    print(f"Total transactions: {n}")
-
-    weights = [item.weight for item in transactions]
-    profits = [item.fee for item in transactions]
-    item_ids = [item.txid for item in transactions]
-
-    weights = np.array(weights)
-    profits = np.array(profits)
-    item_ids = np.array(item_ids)
-
-    start_time = time.time()
-    max_profit, used_items = knapsack_optimized(weight_limit, weights, profits, item_ids, n)
-    end_time = time.time()
-    time_taken = round(end_time - start_time, 3)
-
-    print(f"\nKnapsack took: {time_taken} sec\n")
-
-    return max_profit, used_items
-
-def export_block(max_profit, block) :
-    block_file = f"blocks/block_{max_profit}.txt"
-    with open(block_file, 'w') as f:
-        for line in block :
-            f.write(f"{line}\n")
-
-def validate_block(block, txid_to_transaction_map: typing.Dict[str, MempoolTransaction]) :
-    n = len(block)
-    block_set = set(block)
-    for i in range(n) :
-        txid = block[i]
-        transaction = txid_to_transaction_map[txid]
-        parents = transaction.parents
-
-        # all of its parents should appear in block
-        for parent_id in parents :
-            if parent_id not in block_set :
-                print(f"Parent of: {txid} with id: {parent_id} doesn't appear in block")
-                return False
-    return True
