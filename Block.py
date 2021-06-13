@@ -42,10 +42,11 @@ class Block:
             for line in self.block_array :
                 f.write(f"{line}\n")
 
-    def validate_block(self, txid_to_transaction_map: typing.Dict[str, MempoolTransaction]) :
+    def validate(self, txid_to_transaction_map: typing.Dict[str, MempoolTransaction]) :
         no_of_blocks = len(self.block_array)
         block_set = set(self.block_array)
 
+        is_valid_block = True
         for i in range(no_of_blocks) :
             txid = self.block_array[i]
             transaction = txid_to_transaction_map[txid]
@@ -55,8 +56,8 @@ class Block:
             for parent_id in parents :
                 if parent_id not in block_set :
                     print(f"Parent of: {txid} with id: {parent_id} doesn't appear in block")
-                    return False
-        return True
+                    is_valid_block = False
+        return is_valid_block
 
     @staticmethod
     def validate_block_array(block_array, txid_to_transaction_map: typing.Dict[str, MempoolTransaction]) :
