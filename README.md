@@ -9,4 +9,5 @@
 #### TODO
     - [ ] Create a class `Block` to handle methods related to blocks.
     - [ ] Write a function to verify if a block is valid (Using Note-1).
+    - [x] Fix the `numba reflected list` error.
     
