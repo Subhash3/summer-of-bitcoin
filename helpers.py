@@ -2,6 +2,7 @@ from MempoolTransaction import MempoolTransaction
 import typing
 import time
 from numba import jit
+import numpy as np
 
 def parse_mempool_csv(mempool_file):
     """Parse the CSV file and return a list of MempoolTransactions."""
@@ -75,8 +76,9 @@ def knapsack2(total_weight, weights, profits, item_ids, n):
         Solves the knapsack problem.
         This has been taken from https://www.geeksforgeeks.org/printing-items-01-knapsack/ and modified to suit my needs.
     """
-    lookup = [[0 for w in range(total_weight + 1)]
-            for i in range(n + 1)]
+    # lookup = [[0 for w in range(total_weight + 1)]
+    #         for i in range(n + 1)]
+    lookup = np.zeros((n+1, total_weight+1))
 
     for i in range(n + 1):
         for w in range(total_weight + 1):
@@ -118,6 +120,10 @@ def construct_block(weight_limit, transactions, n) :
     profits = [item.fee for item in transactions]
     item_ids = [item.txid for item in transactions]
 
+    weights = np.array(weights)
+    profits = np.array(profits)
+    item_ids = np.array(item_ids)
+
     start_time = time.time()
     max_profit, used_items = knapsack2(weight_limit, weights, profits, item_ids, n)
     end_time = time.time()
@@ -132,4 +138,3 @@ def export_block(max_profit, block) :
     with open(block_file, 'w') as f:
         for line in block :
             f.write(f"{line}\n")
-    
