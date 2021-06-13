@@ -13,7 +13,7 @@ class Block:
         self.max_profit = 0
     
     def construct(self) :
-        print("Constructing block...\n")
+        print("\nConstructing block...")
 
         print(f"Weight limit: {self.weight_limit}")
         print(f"Total transactions: {self.n}")
@@ -33,7 +33,7 @@ class Block:
         time_taken = round(end_time - start_time, 3)
         print(f"\nKnapsack took: {time_taken} sec\n")
 
-        self.block_array = used_items
+        self.block_array = list(reversed(used_items))
         self.max_profit = max_profit
 
         return max_profit, self.block_array
@@ -44,36 +44,29 @@ class Block:
             for line in self.block_array :
                 f.write(f"{line}\n")
 
-    def validate(self, txid_to_transaction_map: typing.Dict[str, MempoolTransaction]) :
-        no_of_blocks = len(self.block_array)
-        block_set = set(self.block_array)
+    def validate(self, txid_to_transaction_map: typing.Dict[str, MempoolTransaction], txid_to_index_map) :
+        return Block.validate_block_array(self.block_array, txid_to_transaction_map, txid_to_index_map)
+
+    @staticmethod
+    def validate_block_array(block_array, txid_to_transaction_map: typing.Dict[str, MempoolTransaction], txid_to_index_map) :
+        no_of_blocks = len(block_array)
+        block_set = set(block_array)
 
         is_valid_block = True
+        prev_index = None
         for i in range(no_of_blocks) :
-            txid = self.block_array[i]
+            txid = block_array[i]
             transaction = txid_to_transaction_map[txid]
             parents = transaction.parents
+
+            index = txid_to_index_map[txid]
+            # print(index, end=", ")
+
 
             # all of its parents should appear in block
             for parent_id in parents :
                 if parent_id not in block_set :
                     print(f"Parent of: {txid} with id: {parent_id} doesn't appear in block")
                     is_valid_block = False
+        # print()
         return is_valid_block
-
-    @staticmethod
-    def validate_block_array(block_array, txid_to_transaction_map: typing.Dict[str, MempoolTransaction]) :
-        no_of_blocks = len(block_array)
-        block_set = set(block_array)
-
-        for i in range(no_of_blocks) :
-            txid = block_array[i]
-            transaction = txid_to_transaction_map[txid]
-            parents = transaction.parents
-
-            # all of its parents should appear in block
-            for parent_id in parents :
-                if parent_id not in block_set :
-                    print(f"Parent of: {txid} with id: {parent_id} doesn't appear in block")
-                    return False
-        return True
