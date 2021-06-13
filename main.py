@@ -1,6 +1,4 @@
-#!/usr/bin/python3
-
-from helpers import parse_mempool_csv, knapsack_generalized
+from helpers import parse_mempool_csv, construct_block, export_block
 from MempoolTransaction import MempoolTransaction
 import typing
 
@@ -14,8 +12,11 @@ n = len(transactions)
 # for ptxid in t.parents :
 #     print(txid__to_transaction_map[ptxid])
 
-max_profit, used_items = knapsack_generalized(4000, transactions, n)
-print(f"Maximized fee: {max_profit}")
+weight_limit = 100000
+max_profit, block = construct_block(weight_limit, transactions, n)
+print(block)
 
-for txid in used_items :
-    print(txid__to_transaction_map[txid])
+print(f"Max profit: {max_profit}")
+# for txid in block :
+#     print(txid__to_transaction_map[txid])
+export_block(max_profit, block)
