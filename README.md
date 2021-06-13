@@ -8,6 +8,7 @@
 1. A block is valid iff _A transaction apprears in a block only if all of its parents appear earlier in the block_.
 #### TODO
     - [ ] Create a class `Block` to handle methods related to blocks.
-    - [ ] Write a function to verify if a block is valid (Using Note-1).
+    - [x] Write a function to verify if a block is valid (Using Note-1).
     - [x] Fix the `numba reflected list` error.
+
     

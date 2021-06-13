@@ -138,3 +138,18 @@ def export_block(max_profit, block) :
     with open(block_file, 'w') as f:
         for line in block :
             f.write(f"{line}\n")
+
+def validate_block(block, txid_to_transaction_map: typing.Dict[str, MempoolTransaction]) :
+    n = len(block)
+    block_set = set(block)
+    for i in range(n) :
+        txid = block[i]
+        transaction = txid_to_transaction_map[txid]
+        parents = transaction.parents
+
+        # all of its parents should appear in block
+        for parent_id in parents :
+            if parent_id not in block_set :
+                print(f"Parent of: {txid} with id: {parent_id} doesn't appear in block")
+                return False
+    return True
