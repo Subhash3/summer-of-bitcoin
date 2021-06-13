@@ -118,4 +118,7 @@ def describe_transactions_list(transactions: typing.List[MempoolTransaction], li
     for tx in transactions :
         total_weights += tx.weight
         total_fees += tx.fee
-    print(f"{list_name}: Total Fees: {total_fees}, Total weights: {total_weights}")
+    print(f"{list_name}:")
+    print(f"\tNo. of txs: {len(transactions)}")
+    print(f"\tTotal Fees: {total_fees}")
+    print(f"\tTotal weights: {total_weights}")
