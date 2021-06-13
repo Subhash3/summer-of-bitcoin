@@ -1,11 +1,21 @@
-from helpers import parse_mempool_csv
+from helpers import parse_mempool_csv, describe_transactions_list
 from MempoolTransaction import MempoolTransaction
 import typing
 from Block import Block
 
 transactions: typing.List[MempoolTransaction] = list()
 transactions, txid_to_transaction_map = parse_mempool_csv('./resources/mempool.csv')
-n = len(transactions)
+# n = len(transactions)
+
+describe_transactions_list(transactions)
+
+transactions_without_parents = list()
+for transaction in transactions :
+    if len(transaction.parents) == 0 :
+        transactions_without_parents.append(transaction)
+n = len(transactions_without_parents)
+describe_transactions_list(transactions_without_parents)
+
 # print(n)
 
 # t = transactions[526]
@@ -13,8 +23,8 @@ n = len(transactions)
 # for ptxid in t.parents :
 #     print(txid_to_transaction_map[ptxid])
 
-weight_limit = 100000
-b = Block(weight_limit, transactions, n)
+weight_limit = 200000
+b = Block(weight_limit, transactions_without_parents, n)
 max_profit, block_array = b.construct()
 print(f"{len(block_array)} transactions are there in the block")
 

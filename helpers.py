@@ -70,7 +70,7 @@ def knapsack_generalized(total_weight, items:typing.List[MempoolTransaction], n)
 
     return max_profit_bkup, used_items
 
-@jit(nopython=True)
+@jit
 def knapsack_optimized(total_weight, weights, profits, item_ids, n):
     """
         Solves the knapsack problem.
@@ -110,3 +110,12 @@ def knapsack_optimized(total_weight, weights, profits, item_ids, n):
             w = w - weights[i-1]
 
     return max_profit_bkup, used_items
+
+def describe_transactions_list(transactions: typing.List[MempoolTransaction]) :
+    total_fees = 0
+    total_weights = 0
+
+    for tx in transactions :
+        total_weights += tx.weight
+        total_fees += tx.fee
+    print(f"Total Fees: {total_fees}, Total weights: {total_weights}")

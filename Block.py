@@ -13,6 +13,8 @@ class Block:
         self.max_profit = 0
     
     def construct(self) :
+        print("Constructing block...\n")
+
         print(f"Weight limit: {self.weight_limit}")
         print(f"Total transactions: {self.n}")
 
