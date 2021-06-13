@@ -67,7 +67,7 @@ def knapsack(total_weight, weights, profits, n):
 
     return max_profit_bkup, used_items
 
-def knapsack_generalized(total_weight, weights, profits, n):
+def knapsack_generalized(total_weight, items:typing.List[MempoolTransaction], n):
     """
         Solves the knapsack problem.
         This has been taken from https://www.geeksforgeeks.org/printing-items-01-knapsack/ and modified to suit my needs.
@@ -79,8 +79,8 @@ def knapsack_generalized(total_weight, weights, profits, n):
         for w in range(total_weight + 1):
             if i == 0 or w == 0:
                 lookup[i][w] = 0
-            elif weights[i - 1] <= w:
-                lookup[i][w] = max(profits[i - 1] + lookup[i - 1][w - weights[i - 1]], lookup[i - 1][w])
+            elif items[i - 1].weight <= w:
+                lookup[i][w] = max(items[i - 1].fee + lookup[i - 1][w - items[i - 1].weight], lookup[i - 1][w])
             else:
                 lookup[i][w] = lookup[i - 1][w]
 
@@ -99,9 +99,9 @@ def knapsack_generalized(total_weight, weights, profits, n):
         if max_profit == lookup[i - 1][w]:
             continue
         else:
-            # print(weights[i - 1])
-            used_items.append(weights[i - 1])
-            max_profit = max_profit - profits[i - 1]
-            w = w - weights[i - 1]
+            # print(items[i - 1].weight)
+            used_items.append(items[i - 1].txid)
+            max_profit = max_profit - items[i - 1].fee
+            w = w - items[i - 1].weight
 
     return max_profit_bkup, used_items
