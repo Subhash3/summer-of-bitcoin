@@ -71,7 +71,7 @@ def knapsack_generalized(total_weight, items:typing.List[MempoolTransaction], n)
     return max_profit_bkup, used_items
 
 @jit(nopython=True)
-def knapsack2(total_weight, weights, profits, item_ids, n):
+def knapsack_optimized(total_weight, weights, profits, item_ids, n):
     """
         Solves the knapsack problem.
         This has been taken from https://www.geeksforgeeks.org/printing-items-01-knapsack/ and modified to suit my needs.
@@ -125,7 +125,7 @@ def construct_block(weight_limit, transactions, n) :
     item_ids = np.array(item_ids)
 
     start_time = time.time()
-    max_profit, used_items = knapsack2(weight_limit, weights, profits, item_ids, n)
+    max_profit, used_items = knapsack_optimized(weight_limit, weights, profits, item_ids, n)
     end_time = time.time()
     time_taken = round(end_time - start_time, 3)
 
