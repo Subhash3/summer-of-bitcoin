@@ -60,7 +60,9 @@ class Block:
             parents = transaction.parents
 
             index = txid_to_index_map[txid]
-            # print(index, end=", ")
+            if prev_index != None and prev_index > index :
+                print(f"Transaction {i} seem to be out of order({index})!!")
+                is_valid_block = False
 
 
             # all of its parents should appear in block
@@ -68,5 +70,4 @@ class Block:
                 if parent_id not in block_set :
                     print(f"Parent of: {txid} with id: {parent_id} doesn't appear in block")
                     is_valid_block = False
-        # print()
         return is_valid_block
