@@ -40,9 +40,14 @@ class Block:
 
     def export(self):
         block_file = f"blocks/block_{self.max_profit}.txt"
-        with open(block_file, 'w') as f:
-            for line in self.block_array :
-                f.write(f"{line}\n")
+        
+        try:
+            with open(block_file, 'w') as f:
+                for line in self.block_array :
+                    f.write(f"{line}\n")
+            print(f"Exported block to {block_file}")
+        except Exception as e:
+            print(f"Failed to export block...{e}")
 
     def validate(self, txid_to_transaction_map: typing.Dict[str, MempoolTransaction], txid_to_index_map) :
         return Block.validate_block_array(self.block_array, txid_to_transaction_map, txid_to_index_map)
