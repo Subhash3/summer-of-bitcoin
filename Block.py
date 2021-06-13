@@ -7,7 +7,7 @@ import typing
 class Block:
     def __init__(self, weight_limit, transactions, n) :
         self.weight_limit = weight_limit
-        self.transactions = transactions
+        self.transactions: typing.List[MempoolTransaction] = transactions
         self.n = n
         self.block_array = []
         self.max_profit = 0
