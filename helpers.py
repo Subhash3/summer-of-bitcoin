@@ -1,5 +1,6 @@
 from MempoolTransaction import MempoolTransaction
 import typing
+import time
 
 def parse_mempool_csv(mempool_file):
     """Parse the CSV file and return a list of MempoolTransactions."""
@@ -27,45 +28,6 @@ def parse_mempool_csv(mempool_file):
 
         return transactions, txid__to_transaction_map
 
-    
-def knapsack(total_weight, weights, profits, n):
-    """
-        Solves the knapsack problem.
-        This has been taken from https://www.geeksforgeeks.org/printing-items-01-knapsack/ and modified to suit my needs.
-    """
-    lookup = [[0 for w in range(total_weight + 1)]
-            for i in range(n + 1)]
-
-    for i in range(n + 1):
-        for w in range(total_weight + 1):
-            if i == 0 or w == 0:
-                lookup[i][w] = 0
-            elif weights[i - 1] <= w:
-                lookup[i][w] = max(profits[i - 1] + lookup[i - 1][w - weights[i - 1]], lookup[i - 1][w])
-            else:
-                lookup[i][w] = lookup[i - 1][w]
-
-
-    max_profit = lookup[n][total_weight]
-    # print(max_profit)
-    max_profit_bkup = max_profit
-
-    used_items = list()
-
-    w = total_weight
-    for i in range(n, 0, -1):
-        if max_profit <= 0:
-            break
-
-        if max_profit == lookup[i - 1][w]:
-            continue
-        else:
-            # print(weights[i - 1])
-            used_items.append(weights[i - 1])
-            max_profit = max_profit - profits[i - 1]
-            w = w - weights[i - 1]
-
-    return max_profit_bkup, used_items
 
 def knapsack_generalized(total_weight, items:typing.List[MempoolTransaction], n):
     """
@@ -105,3 +67,16 @@ def knapsack_generalized(total_weight, items:typing.List[MempoolTransaction], n)
             w = w - items[i - 1].weight
 
     return max_profit_bkup, used_items
+
+def construct_block(weight_limit, transactions: typing.List[MempoolTransaction], n) :
+    print(f"Weight limit: {weight_limit}")
+    print(f"Total transactions: {n}")
+
+    start_time = time.time()
+    max_profit, used_items = knapsack_generalized(weight_limit, transactions, n)
+    end_time = time.time()
+    time_taken = round(end_time - start_time, 3)
+
+    print(f"\nKnapsack took: {time_taken} sec\n")
+
+    return max_profit, used_items
