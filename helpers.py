@@ -126,3 +126,10 @@ def construct_block(weight_limit, transactions, n) :
     print(f"\nKnapsack took: {time_taken} sec\n")
 
     return max_profit, used_items
+
+def export_block(max_profit, block) :
+    block_file = f"blocks/block_{max_profit}.txt"
+    with open(block_file, 'w') as f:
+        for line in block :
+            f.write(f"{line}\n")
+    
