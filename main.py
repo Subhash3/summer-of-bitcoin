@@ -54,7 +54,8 @@ def Main() :
     ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
     # Analyse an exported block file
-    block_file = "./resources/block_sample.txt"
+    print("\n\n")
+    block_file = "./blocks/block_4094954.0.txt"
     analyse_block_file(block_file, txid_to_transaction_map, txid_to_index_map)
 
 if __name__ == "__main__":
