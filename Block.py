@@ -18,13 +18,9 @@ class Block:
         print(f"Weight limit: {self.weight_limit}")
         print(f"Total transactions: {self.n}")
 
-        weights = [item.weight for item in self.transactions]
-        profits = [item.fee for item in self.transactions]
-        item_ids = [item.txid for item in self.transactions]
-
-        weights = np.array(weights)
-        profits = np.array(profits)
-        item_ids = np.array(item_ids)
+        weights = np.array([item.weight for item in self.transactions])
+        profits = np.array([item.fee for item in self.transactions])
+        item_ids =np.array( [item.txid for item in self.transactions])
 
         start_time = time.time()
         max_profit, used_items = knapsack_optimized(self.weight_limit, weights, profits, item_ids, self.n)
