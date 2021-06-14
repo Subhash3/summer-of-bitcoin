@@ -1,7 +1,24 @@
+from io import DEFAULT_BUFFER_SIZE
 from helpers import parse_mempool_csv, describe_transactions_list, knapsack_generalized
 from MempoolTransaction import MempoolTransaction
 import typing
 from Block import Block
+import sys
+
+DEFAULT_BLOCK_WEIGHT = 50000
+
+def check_usage() :
+    argv = sys.argv
+    argc = len(argv)
+
+    block_weight = DEFAULT_BLOCK_WEIGHT
+    if argc != 2 :
+        print(f"Usage: {argv[0]} [Total Block Weight]")
+        print(f"Using default block weight: {DEFAULT_BLOCK_WEIGHT}\n")
+    else:
+        block_weight = int(argv[1])
+        
+    return block_weight
 
 
 def get_transactions_without_parents(transactions) :
@@ -68,6 +85,8 @@ def combine_parents(transactions: typing.List[MempoolTransaction], txid_to_trans
 
 
 def Main() :
+    block_weight = check_usage()
+
     transactions: typing.List[MempoolTransaction] = list()
     transactions, txid_to_transaction_map = parse_mempool_csv('./resources/mempool.csv')
     describe_transactions_list(transactions, "All Transactions")
@@ -87,7 +106,7 @@ def Main() :
     describe_transactions_list(transactions_without_parents, "Transactions without parents")
 
     ## ## Constructing and exporting a block ## ## #
-    weight_limit = 90000
+    weight_limit = block_weight
     # construct_and_export(weight_limit, transactions, txid_to_transaction_map, txid_to_index_map)
     # construct_and_export(weight_limit, combined_parents_transactions, txid_to_transaction_map, txid_to_index_map)
     construct_and_export(weight_limit, transactions_without_parents, txid_to_transaction_map, txid_to_index_map)
