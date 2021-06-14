@@ -29,7 +29,7 @@ def construct_and_export(weight_limit, transactions, txid_to_transaction_map, tx
     print(f"{len(block_array)} transactions are there in the block")
 
     print(f"Max profit: {max_profit}")
-    # b.export()
+    b.export()
     is_valid_block = b.validate(txid_to_transaction_map, txid_to_index_map)
     print(f"is_valid_block: {is_valid_block}")
 
@@ -79,17 +79,18 @@ def Main() :
         txid_to_index_map[transactions[i].txid] = i
 
 
-    combined_parents_transactions = combine_parents(transactions, txid_to_transaction_map)
-    describe_transactions_list(combined_parents_transactions, "Combined parents transactions")
+    # combined_parents_transactions = combine_parents(transactions, txid_to_transaction_map)
+    # describe_transactions_list(combined_parents_transactions, "Combined parents transactions")
 
     # Get transactions without any parent transactions
-    # transactions_without_parents = get_transactions_without_parents(transactions)
-    # describe_transactions_list(transactions_without_parents, "Transactions without parents")
+    transactions_without_parents = get_transactions_without_parents(transactions)
+    describe_transactions_list(transactions_without_parents, "Transactions without parents")
 
     ## ## Constructing and exporting a block ## ## #
-    weight_limit = 43210
-    construct_and_export(weight_limit, transactions, txid_to_transaction_map, txid_to_index_map)
-    construct_and_export(weight_limit, combined_parents_transactions, txid_to_transaction_map, txid_to_index_map)
+    weight_limit = 90000
+    # construct_and_export(weight_limit, transactions, txid_to_transaction_map, txid_to_index_map)
+    # construct_and_export(weight_limit, combined_parents_transactions, txid_to_transaction_map, txid_to_index_map)
+    construct_and_export(weight_limit, transactions_without_parents, txid_to_transaction_map, txid_to_index_map)
     ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
     # # Analyse an exported block file
