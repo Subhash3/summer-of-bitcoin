@@ -37,3 +37,4 @@ python3 file.py # inside the virtualenv
     - [x] Use only those transactions which do not have parent transactions to avoid the above issue.
     - [x] The transactions in a block are in the reverse order because of knapsack. Due to this, transactions in the block files are in reverse order... Fix it!!
     - [x] Reverse the contents of previously generated block files.
+    - [x] Point #3 in Approach.
