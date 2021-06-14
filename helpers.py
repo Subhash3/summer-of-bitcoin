@@ -31,22 +31,38 @@ def parse_mempool_csv(mempool_file):
         return transactions, txid_to_transaction_map
 
 
-def knapsack_generalized(total_weight, items:typing.List[MempoolTransaction], n):
+@jit
+def include_item_condition() :
+    return True
+
+
+@jit
+def knapsack_generalized(total_weight, weights, profits, item_ids, n):
     """
         Solves the knapsack problem.
         This has been taken from https://www.geeksforgeeks.org/printing-items-01-knapsack/ and modified to suit my needs.
     """
-    lookup = [[0 for w in range(total_weight + 1)]
-            for i in range(n + 1)]
+        # lookup = [[0 for w in range(total_weight + 1)]
+    #         for i in range(n + 1)]
+    lookup = np.zeros((n+1, total_weight+1))
 
     for i in range(n + 1):
         for w in range(total_weight + 1):
             if i == 0 or w == 0:
                 lookup[i][w] = 0
-            elif items[i - 1].weight <= w:
-                lookup[i][w] = max(items[i - 1].fee + lookup[i - 1][w - items[i - 1].weight], lookup[i - 1][w])
+            elif weights[i-1] <= w:
+                exclude_current = lookup[i - 1][w]
+                
+                if include_item_condition() :
+                    include_current = profits[i-1] + lookup[i - 1][w - weights[i-1]]
+                else :
+                    include_current = exclude_current
+                lookup[i][w] = max(include_current, exclude_current)
             else:
                 lookup[i][w] = lookup[i - 1][w]
+
+    # for row in lookup :
+    #     print(row)
 
 
     max_profit = lookup[n][total_weight]
@@ -64,9 +80,9 @@ def knapsack_generalized(total_weight, items:typing.List[MempoolTransaction], n)
             continue
         else:
             # print(items[i - 1].weight)
-            used_items.append(items[i - 1].txid)
-            max_profit = max_profit - items[i - 1].fee
-            w = w - items[i - 1].weight
+            used_items.append(item_ids[i - 1])
+            max_profit = max_profit - profits[i-1]
+            w = w - weights[i-1]
 
     return max_profit_bkup, used_items
 
